@@ -1,4 +1,5 @@
 import cv2 
+import sys
 import time
 import os
 import math
@@ -83,9 +84,13 @@ print('Prediction: {}'.format(pred))
 
 fig, ax = plt.subplots(1, 1,  figsize= (5, 5))
 ax.imshow(retinal_image)
-ax.contour(OC_mask, colors='b')
-ax.contour(OD_mask, colors='b', linewidths=1)
+ax.contour(OC_mask, colors='b' )
+ax.contour(OD_mask, colors='w')
 ax.grid(False)
 ax.set(title='OD/OC segmentation')
 ax.text(200, 200, 'Prediction: {}'.format(pred), fontsize='medium', color ='w')
-plt.show()
+plt.draw()
+while True:
+    if plt.waitforbuttonpress(0) == True:
+        plt.close()
+        break
