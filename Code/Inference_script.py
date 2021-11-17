@@ -17,9 +17,9 @@ from classification import *
 from supporting import *
 
 # Load model
-segmentation_model_path_OD = 'Models/model OD semantic'
-segmentation_model_path_OC = 'Models/model OC semantic'
-inference_model_path = 'Models/Inference model/inference_model.sav'
+segmentation_model_path_OD = 'Code/Models/model OD semantic'
+segmentation_model_path_OC = 'Code/Models/model OC semantic'
+inference_model_path = 'Code/Models/Inference model/inference_model.sav'
 
 # Load semantic segmentation model 
 model_OD = tf.keras.models.load_model(segmentation_model_path_OD,custom_objects={'fscore':fscore})
@@ -29,9 +29,9 @@ model_OC = tf.keras.models.load_model(segmentation_model_path_OC,custom_objects=
 inference_model = pickle.load(open(inference_model_path, 'rb'))
 
 # Load Optic Disc Image Templates
-image_R = cv2.imread('Templates/ROItemplateRed.png', 0)
-image_G = cv2.imread('Templates/ROItemplateGreen.png', 0)
-image_B = cv2.imread('Templates/ROItemplateBlue.png', 0)
+image_R = cv2.imread('Code/Templates/ROItemplateRed.png', 0)
+image_G = cv2.imread('Code/Templates/ROItemplateGreen.png', 0)
+image_B = cv2.imread('Code/Templates/ROItemplateBlue.png', 0)
 image_templates = [image_R, image_G, image_B]
 
 # Define Hyperparameter 
@@ -52,7 +52,7 @@ retinal_image = cv2.cvtColor(retinal_image, cv2.COLOR_BGR2RGB)
 # Localize Optic Disc
 start_loc = time.time()
 disc_center = OD_Localization(retinal_image, image_templates, 
-                              sed_channels=used_channels, 
+                              used_channels=used_channels, 
                               bright_on=True,  
                               r_coeff=r_coeff, 
                               g_coeff=g_coeff, 
