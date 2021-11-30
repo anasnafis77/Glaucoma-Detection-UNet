@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Glaucoma Detection</h1>
+
+    <form method="POST" action=' {{ url_for('index') }} ' enctype='multipart/form-data'>
+        <div class="form-group">
+          <input type="file" class="form-control-file" name='log_file'>
+          <button type="submit" name="button" class='btn btn-primary btn-sm'>Submit</button>
+        </div>
+    </form>
+
+    {% for ip, counts in ips %}
+        <p>{{ ip }} - {{ counts }}</p>
+    {% endfor %}
+
+{% endblock %}
