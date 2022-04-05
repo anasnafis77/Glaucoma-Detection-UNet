@@ -2,17 +2,23 @@
 
 ## Intoduction:
 
-Glaukoma merupakan penyakit mata penybebab kebutaan nomor dua setelah katarak. Sayangnya di Indonesia, pendeteksian dini penyakit glaukoma masih merupakan hal yang tidak biasa di lingkungan masyarakat. Selain itu, pendeteksian glaukoma manual merupakan pekerjaan yang tidak mudah oleh dokter mata karena membutuhkan ketelitian dan waktu yang cukup lama. Belum lagi adanya pengaruh subjektifitas terhadap penilaian glaukoma oleh setiap dokter mata membuat metode manual menjadi kurang dapat diandalkan. Oleh karena itu, saya mencoba membuat algoritma deteksi glaukoma berdasarkan karakteristik optic disc dan optic cup yang dapat diimplementasikan pada smartphone. 
+Glaucoma is the second cause of blindness. Unfortunately, Indonesian people still unaware for the importance of early glaucoma detection. Moreover, Glaucoma Detection is the laborous and subjective job for ophtalmologists. Thus, we need the automation for glaucoma detection based on Optic Cup and Disc segmentation. This automoation allow us to detect glaucoma more faster. Furthermore, this is possible to implemented in smartphone, hence more people could monitor their eyes from glaucoma in much more affordable way.
 
-Pada projek kali ini, saya akan membuat algoritma deteksi glaukoma berdasarkan karakteristik optic disc dan optic cup dengan input berupa citra retina. Secara umum, pendeteksian ini dilakukan dengan langkah berikut:
+Below are the main algorithm for Glaucoma Detection used in this project: 
 1. Preprocessing
-2. Lokalisasi Optic Disc
-3. Segmentasi Optic Disc dan Cup
-4. Ekstraksi Fitur Glaukoma
-5. Klasifikasi
- 
+2. Optic Disc Localization
+3. Optic Disc dan Cup Segmentation
+4. Glaucoma Feature Extraction
+5. Classification
 
-## Main Notebook:
+## Usage
+Below are the procedure for using this script:
+1. Run this: `python inference_script.py` in command prompt. Make sure you are on 'Code' the directory.
+2. Choose your retinal image.
+3. After a few seconds, the detection result should appear in command prompt and json file.
+ 
+## Notebooks:
+Main Notebook:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/anasnafis77/Deteksi-Glaukoma/blob/main/Notebooks/Main_notebook.ipynb) 
 
 Localization Notebook:
