@@ -2,7 +2,7 @@
 
 ## Intoduction:
 
-Glaucoma is the second cause of blindness. Unfortunately, Indonesian people still unaware for the importance of early glaucoma detection. Moreover, Glaucoma Detection is the laborous and subjective job for ophtalmologists. Thus, we need the automation for glaucoma detection based on Optic Cup and Disc segmentation. This automoation allow us to detect glaucoma more faster. Furthermore, this is possible to implemented in smartphone, hence more people could monitor their eyes from glaucoma in much more affordable way.
+Glaucoma is the second cause of blindness. Unfortunately, Indonesian people still unaware for the importance of early glaucoma detection. Moreover, Glaucoma Detection is the laborous and subjective job for ophtalmologists. Thus, we need the automation for glaucoma detection. We use glaucoma detection based on Optic Cup and Disc segmentation. This automation allow us to detect glaucoma more faster and less subjective. Furthermore, this system could be implemented in smartphone, hence more patient could monitor their glaucoma stage in much more affordable way.
 
 Below are the main algorithm for Glaucoma Detection used in this project: 
 1. Preprocessing
@@ -13,7 +13,7 @@ Below are the main algorithm for Glaucoma Detection used in this project:
 
 ## Usage
 Below are the procedure for using this script:
-1. Run this: `python inference_script.py` in command prompt. Make sure you are on 'Code' the directory.
+1. Run this: `python inference_script.py` in command prompt. Make sure you are in 'Code' directory.
 2. Choose your retinal image.
 3. After a few seconds, the detection result should appear in command prompt and json file.
  
