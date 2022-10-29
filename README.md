@@ -11,7 +11,7 @@ The main algorithm for our Glaucoma Detection is follow:
 4. Glaucoma Feature Extraction
 5. Glaucoma Prediction
 
-[alt text](https://github.com/anasnafis77/Glaucoma-Detection-UNet/tree/main/readme_img/alg.png?raw=true "Glaucoma Detection Algorithm")
+![alt text](https://github.com/anasnafis77/Glaucoma-Detection-UNet/blob/main/readme_img/alg.png?raw=true "Glaucoma Detection Algorithm")
 
 ## Usage
 Below are the procedure for using this script:
