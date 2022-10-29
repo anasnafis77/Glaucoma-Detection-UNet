@@ -6,91 +6,69 @@ import math
 import pickle
 import numpy as np
 import tkinter as tk
-import tensorflow as tf
 from skimage.transform import resize
 from skimage.segmentation import slic
 from matplotlib import pyplot as plt
 from keras import backend as K
 from tkinter import filedialog
-from localization import *
-from segmentation import *
-from classification import *
-from supporting import *
+from localization import OD_localization
+from segmentation import optic_segmentation
+from classification import inference_glaucoma
+from supporting_function import *
 
-# Load model
-segmentation_model_path_OD = 'Code/Models/model OD semantic'
-segmentation_model_path_OC = 'Code/Models/model OC semantic'
-inference_model_path = 'Code/Models/Inference model/inference_model.sav'
+if __name__ == "__main__":
+    # Load module objects
+    ODFinder = OD_localization() # localization model
+    segModel = optic_segmentation() # segmentation model
+    glPredictor = inference_glaucoma() # glaucoma predictor
 
-# Load semantic segmentation model 
-model_OD = tf.keras.models.load_model(segmentation_model_path_OD,custom_objects={'fscore':fscore})
-model_OC = tf.keras.models.load_model(segmentation_model_path_OC,custom_objects={'fscore':fscore})
+    # Define Hyperparameter 
+    ROI_SIZE = 550
+    R_COEFF, G_COEFF, B_COEFF, BR_COEFF = 1, 0.2, 0, 0.8 # grid search result
+    coeff_args = (R_COEFF, G_COEFF, B_COEFF, BR_COEFF)
+    STD_SIZE = (2000, 2000)
 
-# Load inference model
-inference_model = pickle.load(open(inference_model_path, 'rb'))
+    # load image and ROI 
+    ret_img = cv2.imread(file_path, 1)
+    ret_img = cv2.cvtColor(ret_img, cv2.COLOR_BGR2RGB)
 
-# Load Optic Disc Image Templates
-image_R = cv2.imread('Code/Templates/ROItemplateRed.png', 0)
-image_G = cv2.imread('Code/Templates/ROItemplateGreen.png', 0)
-image_B = cv2.imread('Code/Templates/ROItemplateBlue.png', 0)
-image_templates = [image_R, image_G, image_B]
+    # preprocessing
+    ret_img = ODFinder.preprocessing(ret_img, STD_SIZE)
 
-# Define Hyperparameter 
-ROI_size = 550
-r_coeff, g_coeff,b_coeff, br_coeff = 1, 0.2, 0, 0.8
-used_channels = 'rg' 
+    # Localize Optic Disc
+    start_loc = time.time()
+    disc_center = ODFinder(ret_img, coeff_args=coeff_args)
+    end_loc = time.time()
 
-# Select the image that want to be predict
-root = tk.Tk()
-root.withdraw()
-file_path = filedialog.askopenfilename()
-filename = file_path.split('/')[-1]
-
-# load image and ROI 
-retinal_image = cv2.imread(file_path, 1)
-retinal_image = cv2.cvtColor(retinal_image, cv2.COLOR_BGR2RGB)
-
-# Localize Optic Disc
-start_loc = time.time()
-disc_center = OD_Localization(retinal_image, image_templates, 
-                              used_channels=used_channels, 
-                              bright_on=True,  
-                              r_coeff=r_coeff, 
-                              g_coeff=g_coeff, 
-                              b_coeff=b_coeff,
-                              br_coeff=br_coeff)
-end_loc = time.time()
-
-# OD and OC segmentation 
-start_seg = time.time()
-clahe = cv2.createCLAHE(clipLimit =2.0, tileGridSize=(8,8))
-cl_img = clahe.apply(retinal_image[:, :, 1])
-ROI, coordinate = ekstrakROI(disc_center, ROI_size, cl_img)
-OD_mask = semantic_segmentation(ROI, model_OD, coordinate, retinal_image.shape[:2])
-OC_mask = semantic_segmentation(ROI, model_OC, coordinate, retinal_image.shape[:2])
-end_seg = time.time()
+    # OD and OC segmentation 
+    start_seg = time.time()
+    clahe = cv2.createCLAHE(clipLimit =2.0, tileGridSize=(8,8))
+    cl_img = clahe.apply(retinal_image[:, :, 1])
+    ROI, coordinate = ekstrakROI(ret_img, ROI_size, cl_img)
+    OD_pred, OC_pred = segModel.do_segmentation(ROI, coordinate, )
+    end_seg = time.time()
 
 
-print('Localization time: {:.2f} s'.format(end_loc-start_loc))
-print('Segmentation time: {:.2f} s'.format(end_seg-start_seg))
+    print('Localization time: {:.2f} s'.format(end_loc-start_loc))
+    print('Segmentation time: {:.2f} s'.format(end_seg-start_seg))
 
-# Inference the feature
-VCDR,_,ACDR = CDR_calc(OD_mask, OC_mask)
-feature = np.array([VCDR, ACDR])
-pred = glaucoma_predict(inference_model, feature)
+    # Inference the feature
+    VCDR,HCDR,ACDR = CDR_calc(OD_mask, OC_mask)
+    feature = np.array([VCDR, ACDR]) # best prediction achieved by using only VCDR and ACDR
+    pred = glaucoma_predict(inference_model, feature)
 
-print('Detection report of file ', filename)
-print('Prediction: {}'.format(pred))
+    print('Detection report of file ', filename)
+    print('Prediction: {}'.format(pred))
 
-fig, ax = plt.subplots(1, 1,  figsize= (5, 5))
-ax.imshow(retinal_image)
-ax.contour(OC_mask, colors='b' )
-ax.contour(OD_mask, colors='w')
-ax.grid(False)
-ax.set(title='OD/OC segmentation')
-ax.text(200, 200, 'Prediction: {}'.format(pred), fontsize='medium', color ='w')
-plt.draw()
-while True:
-    if plt.waitforbuttonpress(0) == True:
-        plt.close()
-        break
+    fig, ax = plt.subplots(1, 1,  figsize= (5, 5))
+    ax.imshow(retinal_image)
+    ax.contour(OC_pred, colors='b')
+    ax.contour(OD_pred, colors='w')
+    ax.grid(False)
+    ax.set(title='OD/OC segmentation')
+    ax.text(200, 200, 'Prediction: {}'.format(pred), fontsize='medium', color ='w')
+    plt.draw()
+    while True:
+        if plt.waitforbuttonpress(0) == True:
+            plt.close()
+            break
