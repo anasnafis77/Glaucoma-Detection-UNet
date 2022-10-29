@@ -6,13 +6,13 @@ from skimage.segmentation import slic
 class OD_localization():
   def __init__(self):
     # loading template
-    image_R = cv2.imread('Code/Templates/ROItemplateRed.png', 0)
-    image_G = cv2.imread('Code/Templates/ROItemplateGreen.png', 0)
-    image_B = cv2.imread('Code/Templates/ROItemplateBlue.png', 0)
+    image_R = cv2.imread('Templates/ROItemplateRed.png', 0)
+    image_G = cv2.imread('Templates/ROItemplateGreen.png', 0)
+    image_B = cv2.imread('Templates/ROItemplateBlue.png', 0)
     self.image_templates = [image_R, image_G, image_B]
 
   def preprocessing(self, src, std_size):
-    return resize(src, output_shape=std_size, mode = 'constant')
+    return cv2.resize(src, std_size, interpolation=cv2.INTER_CUBIC)
 
   def extract_BR_map(self, src, mask, numSegments=50, sigma=10):
     """
@@ -121,7 +121,7 @@ class OD_localization():
     return NCC_maps
 
 
-  def predict(self, src, coeff_args, test_on=False):
+  def locate(self, src, coeff_args, test_on=False):
     """
       This is the main function for localization of Optic Disc
       
@@ -142,7 +142,7 @@ class OD_localization():
       test_on is True.
     """
 
-      
+    R_COEFF, G_COEFF, B_COEFF, BR_COEFF = coeff_args
     h, w = src.shape[:2]
 
     # Implement CLAHE to the input image 
@@ -169,7 +169,7 @@ class OD_localization():
     brightness_map = self.extract_BR_map(src, mask)
 
     # Combining localization maps 
-    combined_map = red_NCC * r_coeff + green_NCC*g_coeff + blue_NCC*b_coeff + brightness_map*br_coeff
+    combined_map = red_NCC * R_COEFF + green_NCC*G_COEFF + blue_NCC*B_COEFF + brightness_map*BR_COEFF
     all_maps = [combined_map, red_NCC, green_NCC, blue_NCC, brightness_map]
     
     # Extracting maximum value of NCC

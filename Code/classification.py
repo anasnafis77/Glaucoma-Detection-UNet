@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pickle
 class inference_glaucoma():
-  def __init__(self, model_path='Code/Models/Inference model'):
+  def __init__(self, model_path='Models/Inference model/inference_model.sav'):
     # load model
     self.model = pickle.load(open(model_path, 'rb'))
   def CDR_calc(self, OD_mask, OC_mask):
@@ -28,7 +28,7 @@ class inference_glaucoma():
     return VCDR, HCDR, ACDR
 
 
-  def predict(self, model, feature):
+  def predict(self, feature):
     predict = self.model.predict([feature])
     if predict[0] == 1:
       return 'Glaucoma'

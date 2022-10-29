@@ -2,20 +2,23 @@
 
 ## Intoduction:
 
-Glaucoma is the second cause of blindness. Unfortunately, Indonesian people still unaware for the importance of early glaucoma detection. Moreover, Glaucoma Detection is the laborous and subjective job for ophtalmologists. Thus, we need the automation for glaucoma detection. We use glaucoma detection based on Optic Cup and Disc segmentation. This automation allow us to detect glaucoma more faster and less subjective. Furthermore, this system could be implemented in smartphone, hence more patient could monitor their glaucoma stage in much more affordable way. For further algorithm explanation, you can read this paper code [here](http://www.joig.net/index.php?m=content&c=index&a=show&catid=78&id=299) 
+Glaucoma is the second cause of blindness. Unfortunately, Indonesian people still unaware for the importance of early glaucoma detection. Moreover, Glaucoma Detection is the laborous and subjective job for ophtalmologists. Thus, we need the automation for glaucoma detection. We use glaucoma detection based on Optic Cup and Disc segmentation. This automation allow us to detect glaucoma more faster and less subjective. Furthermore, this system could be implemented in smartphone, hence more patient could monitor their glaucoma stage in much more affordable way. For further algorithm explanation, you can read our paper [here](http://www.joig.net/index.php?m=content&c=index&a=show&catid=78&id=299).
 
-Below are the main algorithm for Glaucoma Detection used in this project: 
+The main algorithm for our Glaucoma Detection is follow: 
 1. Preprocessing
 2. Optic Disc Localization
 3. Optic Disc dan Cup Segmentation
 4. Glaucoma Feature Extraction
-5. Classification
+5. Glaucoma Prediction
+
+[Glaucoma detection algorithm](https://github.com/anasnafis77/Glaucoma-Detection-UNet/tree/main/readme_img/Alur algoritma for poster english.png)
 
 ## Usage
 Below are the procedure for using this script:
-1. Run this: `python inference_script.py` in command prompt. Make sure you are in 'Code' directory.
-2. Choose your retinal image.
-3. After a few seconds, the detection result should appear in command prompt and json file.
+1. Open your command line interface (command prompt, powershell, etc.) and go to project directory.
+2. Install all libraries in requirements.txt (pip install -r requirements.txt).   
+3. Run this: `python main.py /path/to/retinal_image.jpg` in command prompt. Make sure you are in 'Code' directory.
+4. After a few seconds, the detection result should appear in your command line interface and segmentation result would appear from matplotlib window.
  
 ## Notebooks:
 Main Notebook:
@@ -27,7 +30,7 @@ Localization Notebook:
 Segmentation Notebook:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/anasnafis77/Deteksi-Glaukoma/blob/main/Notebooks/Segmentation_notebook.ipynb)
 
-Inferencing Notebook:
+Glaucoma prediction Notebook:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/anasnafis77/Deteksi-Glaukoma/blob/main/Notebooks/Inferencing_notebook.ipynb)
 
 ## Reference

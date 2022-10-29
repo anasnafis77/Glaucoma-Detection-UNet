@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from skimage.transform import resize
+from keras import backend as K
 import tensorflow as tf
 
 def fscore(y_true, y_pred):
@@ -9,7 +10,7 @@ def fscore(y_true, y_pred):
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
 class optic_segmentation():
-  def __init__(self, model_OD_path='Code/Models/model OD semantic', model_OC_path='Code/Models/model OC semantic'):
+  def __init__(self, model_OD_path='Models/model OD semantic', model_OC_path='Models/model OC semantic'):
     # Load semantic segmentation model 
     self.model_OD = tf.keras.models.load_model(model_OD_path,custom_objects={'fscore':fscore})
     self.model_OC = tf.keras.models.load_model(model_OC_path,custom_objects={'fscore':fscore})

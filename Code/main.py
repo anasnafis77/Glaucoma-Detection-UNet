@@ -1,22 +1,17 @@
 import cv2 
 import sys
 import time
-import os
-import math
-import pickle
 import numpy as np
-import tkinter as tk
-from skimage.transform import resize
-from skimage.segmentation import slic
 from matplotlib import pyplot as plt
-from keras import backend as K
-from tkinter import filedialog
 from localization import OD_localization
 from segmentation import optic_segmentation
 from classification import inference_glaucoma
 from supporting_function import *
 
 if __name__ == "__main__":
+    # take path from argument
+    file_path = sys.argv[1]
+
     # Load module objects
     ODFinder = OD_localization() # localization model
     segModel = optic_segmentation() # segmentation model
@@ -37,31 +32,30 @@ if __name__ == "__main__":
 
     # Localize Optic Disc
     start_loc = time.time()
-    disc_center = ODFinder(ret_img, coeff_args=coeff_args)
+    disc_center = ODFinder.locate(ret_img, coeff_args=coeff_args)
     end_loc = time.time()
-
+    print(disc_center)
     # OD and OC segmentation 
     start_seg = time.time()
     clahe = cv2.createCLAHE(clipLimit =2.0, tileGridSize=(8,8))
-    cl_img = clahe.apply(retinal_image[:, :, 1])
-    ROI, coordinate = ekstrakROI(ret_img, ROI_size, cl_img)
-    OD_pred, OC_pred = segModel.do_segmentation(ROI, coordinate, )
+    cl_img = clahe.apply(ret_img[:, :, 1]) # apply clahe on green channel 
+    ROI, coordinate = ekstrakROI(disc_center, ROI_SIZE, cl_img)
+    OD_pred, OC_pred = segModel.do_segmentation(ROI, coordinate, ret_img.shape[:2])
     end_seg = time.time()
-
 
     print('Localization time: {:.2f} s'.format(end_loc-start_loc))
     print('Segmentation time: {:.2f} s'.format(end_seg-start_seg))
 
     # Inference the feature
-    VCDR,HCDR,ACDR = CDR_calc(OD_mask, OC_mask)
+    VCDR,HCDR,ACDR = glPredictor.CDR_calc(OD_pred, OC_pred)
     feature = np.array([VCDR, ACDR]) # best prediction achieved by using only VCDR and ACDR
-    pred = glaucoma_predict(inference_model, feature)
+    pred = glPredictor.predict(feature)
 
-    print('Detection report of file ', filename)
+    print('Detection report')
     print('Prediction: {}'.format(pred))
 
     fig, ax = plt.subplots(1, 1,  figsize= (5, 5))
-    ax.imshow(retinal_image)
+    ax.imshow(ret_img)
     ax.contour(OC_pred, colors='b')
     ax.contour(OD_pred, colors='w')
     ax.grid(False)
