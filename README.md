@@ -19,7 +19,11 @@ Below are the procedure for using this script:
 2. Install all libraries in requirements.txt (pip install -r requirements.txt).   
 3. Run this: `python main.py /path/to/retinal_image.jpg` in command prompt. Make sure you are in 'Code' directory.
 4. After a few seconds, the detection result should appear in your command line interface and segmentation result would appear from matplotlib window.
- 
+
+## Dataset link:
+1. [Drishti-GS1](http://cvit.iiit.ac.in/projects/mip/drishti-gs/mip-dataset2/Home.php)
+2. [REFUGE](https://refuge.grand-challenge.org/REFUGE2Download/) (probably you have to ask miccai 2020 permission to download the dataset) 
+
 ## Notebooks:
 Main Notebook:
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/anasnafis77/Deteksi-Glaukoma/blob/main/Notebooks/Main_notebook.ipynb) 
